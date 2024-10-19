@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: layout(~{::section})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Sign-Up</title>
+
+</head>
+<body>
+<section>
+    <div class="container">
+        <div class="row register-container">
+            <div class="col-md-5 p-0">
+                <img src="img/ecom.png" class="img-fluid register-image" alt="E-commerce illustration">
+            </div>
+            <div class="col-md-7 register-form ">
+                <h2 class="text-center register-header">Create Your Account</h2>
+                <th:block th:if="${session.successMsg}">
+                    <p class="modern-success-msg">
+                        <span class="modern-success-icon"></span>
+                        <span class="fw-bold">[[${session.successMsg}]]</span>
+                    </p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>
+                </th:block>
+                <th:block th:if="${session.errorMsg}">
+                    <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>
+                </th:block>
+                <form action="/saveUser" enctype="multipart/form-data" method="post">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="form-control" name="name" type="text" placeholder="Full Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" name="mobileNumber" type="tel" placeholder="Mobile Number" required>
+                        </div>
+                    </div>
+
+
+                    <input class="form-control" name="email" type="email" placeholder="Email" required>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="form-control" name="address" type="text" placeholder="Address" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" name="city" type="text" placeholder="City" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="form-control" name="state" type="text" placeholder="State" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" name="pincode" type="number" placeholder="Pin Code" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="form-control" name="password" type="password" placeholder="Password" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" name="Confirm-Password" type="password"
+                                   placeholder="Confirm Password" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Profile Image</label>
+                        <input class="form-control" name="img" type="file" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-register w-100 mb-3">Create Account</button>
+                </form>
+                <div class="text-center">
+                    <span>Already have an account? </span>
+                    <a href="/login" class="text-decoration-none">Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

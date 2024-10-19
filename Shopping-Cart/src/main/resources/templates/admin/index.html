@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: layout(~{::section})}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+   </head>
+<body>
+<section>
+    <div class="admin-dashboard">
+        <h1 class="admin-dashboard__title">Admin Dashboard</h1>
+        <div class="admin-dashboard__grid">
+            <!-- Add Product -->
+            <a href="/admin/addProduct" class="admin-dashboard__item">
+                <div class="admin-dashboard__item-content">
+                    <i class="fa-solid fa-square-plus admin-dashboard__icon"></i>
+                    <h2 class="admin-dashboard__item-title">Add Product</h2>
+                </div>
+            </a>
+            <!-- Add Category -->
+            <a href="/admin/category" class="admin-dashboard__item">
+                <div class="admin-dashboard__item-content">
+                    <i class="fa-solid fa-list admin-dashboard__icon"></i>
+                    <h2 class="admin-dashboard__item-title">Add Category</h2>
+                </div>
+            </a>
+            <!-- View Product -->
+            <a href="/admin/products" class="admin-dashboard__item">
+                <div class="admin-dashboard__item-content">
+                    <i class="fa-solid fa-rectangle-list admin-dashboard__icon"></i>
+                    <h2 class="admin-dashboard__item-title">View Product</h2>
+                </div>
+            </a>
+            <!-- Orders -->
+            <a href="#" class="admin-dashboard__item">
+                <div class="admin-dashboard__item-content">
+                    <i class="fa-solid fa-gift admin-dashboard__icon"></i>
+                    <h2 class="admin-dashboard__item-title">Orders</h2>
+                </div>
+            </a>
+            <!-- Users -->
+            <a href="/admin/users" class="admin-dashboard__item">
+                <div class="admin-dashboard__item-content">
+                    <i class="fa-solid fa-user admin-dashboard__icon"></i>
+                    <h2 class="admin-dashboard__item-title">Users</h2>
+                </div>
+            </a>
+            <!-- Add Admin -->
+            <a href="#" class="admin-dashboard__item">
+                <div class="admin-dashboard__item-content">
+                    <i class="fa-solid fa-user-tie admin-dashboard__icon"></i>
+                    <h2 class="admin-dashboard__item-title">Add Admin</h2>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+</body>
+</html>
