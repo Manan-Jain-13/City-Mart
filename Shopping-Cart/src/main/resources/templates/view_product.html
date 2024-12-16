@@ -14,8 +14,65 @@
 
         <div class="col-md-12 p-5">
             <div class="row">
+               <!-- <th:block th:if="${session.successMsg}">
+                   &lt;!&ndash; <p class="modern-success-msg">
+                        <span class="modern-success-icon"></span>
+                        <span class="fw-bold">[[${session.successMsg}]]</span>
+                    </p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>&ndash;&gt;
+                    <div class="toast-container">
+                        <div class="toast custom-toast" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <strong class="me-auto">City Mart</strong>
+                                <small>just now</small>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                [[${session.successMsg}]]
+                                <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+                <th:block th:if="${session.errorMsg}">
+                 &lt;!&ndash;   <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
+                    <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>&ndash;&gt;
+                </th:block>
+-->
+                <div class="toast-container">
+                    <!-- Success Toast -->
+                    <th:block th:if="${session.successMsg}">
+                        <div class="toast success-toast" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <strong class="me-auto">City Mart</strong>
+                                <small>just now</small>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                [[${session.successMsg}]]
+                                <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>
+                            </div>
+                        </div>
+                    </th:block>
+
+                    <!-- Error Toast -->
+                    <th:block th:if="${session.errorMsg}">
+                        <div class="toast error-toast" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <strong class="me-auto">City Mart</strong>
+                                <small>just now</small>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                [[${session.errorMsg}]]
+                                <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
                 <div class="col-md-6 text-center">
                     <img src="/img/product_img/trimmer.png" alt="" width="350px" height="400px">
+                  <!--  <img th:src="@{'img/product_img/'+${p.imageName}}" alt="" width="100%" height="150px">-->
                 </div>
                 <div class="col-md-6">
                     <p class="fs-3">[[${product.title}]]</p>
@@ -55,8 +112,15 @@
                         </div>
                     </div>
                     <th:block th:if="${product.stock>0}">
-                        <a href="login.jsp" class="btn btn-danger col-md-12">Add to Cart</a>
+                        <th:block th:if="${user==null}">
+                        <a href="/signin" class="btn btn-danger col-md-12">Add to Cart</a>
                     </th:block>
+
+                    <th:block th:unless="${user==null}">
+                        <a th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}" class="btn btn-danger col-md-12">Add to Cart</a>
+                    </th:block>
+                    </th:block>
+
                     <th:block th:unless="${product.stock>0}">
                         <a href="#" class="btn btn-warning col-md-12">Not Available</a>
                     </th:block>
@@ -64,6 +128,18 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            var toastList = toastElList.map(function(toastEl) {
+                return new bootstrap.Toast(toastEl, {
+                    autohide: true,
+                    delay: 3000
+                });
+            });
+            toastList.forEach(toast => toast.show());
+        });
+    </script>
 </section>
 </body>
 </html>

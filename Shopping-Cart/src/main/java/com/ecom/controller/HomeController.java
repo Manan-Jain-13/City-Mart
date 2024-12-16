@@ -3,6 +3,7 @@ package com.ecom.controller;
 import com.ecom.entity.Category;
 import com.ecom.entity.Product;
 import com.ecom.entity.UserDtls;
+import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
@@ -48,12 +49,17 @@ public class HomeController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CartService cartService;
+
     @ModelAttribute
     public void getUserDetails(Principal p,Model model){
         if (p!=null){
             String email = p.getName();
             UserDtls userDtls = userService.getUserByEmail(email);
             model.addAttribute("user",userDtls);
+            Integer countCart = cartService.getCountCart(userDtls.getId());
+            model.addAttribute("countCart",countCart);
         }
 
         List<Category> allActiveCategory = categoryService.getAllActiveCategory();
@@ -175,6 +181,15 @@ public class HomeController {
             return "login";
         }
 
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam String ch,Model model){
+        List<Product> searchProducts = productService.searchProduct(ch);
+        List<Category> categories = categoryService.getAllActiveCategory();
+        model.addAttribute("categories",categories);
+        model.addAttribute("products",searchProducts);
+        return "product";
     }
 
 }

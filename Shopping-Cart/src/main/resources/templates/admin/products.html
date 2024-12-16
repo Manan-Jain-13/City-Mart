@@ -10,8 +10,8 @@
 <body>
 <section>
 <div class="container-fluid mt-5 p-5" style="flex:1">
-    <!--<div class="row">
-        <div class="col-md-10 offset-md-1">-->
+    <div class="row">
+        <!--<div class="col-md-10 offset-md-1">-->
     <div class="card">
         <div class="card-header text-center">
             <p class="fs-4 fw-bold">PRODUCTS LIST</p>
@@ -24,6 +24,22 @@
                 <p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
                 <th:block th:text="${@commonServiceImpl.removeSessionMsg()}"></th:block>
             </th:block>
+            <div class="admin-orders-search-wrapper">
+                <form action="/admin/search-order" method="get">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-8 col-lg-10">
+                            <input type="text" placeholder="Product Name"
+                                   class="admin-orders-search-input" name="orderId" >
+                        </div>
+                        <div class="col-md-4 col-lg-2">
+                            <button class="admin-orders-search-button w-100">
+                                Search Orders
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
         </div>
         <div class="card-body">
             <table class="table">
@@ -63,8 +79,8 @@
         </div>
     </div>
     </div>
-    <!--</div>
-</div>-->
+    </div>
+    <!--</div>-->
 </section>
 </body>
 </html>

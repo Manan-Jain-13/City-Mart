@@ -2,10 +2,14 @@ package com.ecom.controller;
 
 import com.ecom.entity.Category;
 import com.ecom.entity.Product;
+import com.ecom.entity.ProductOrder;
 import com.ecom.entity.UserDtls;
 import com.ecom.service.CategoryService;
+import com.ecom.service.OrderService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
+import com.ecom.util.CommonUtil;
+import com.ecom.util.OrderStatus;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -41,6 +45,12 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @ModelAttribute
     public void getUserDetails(Principal p, Model model){
@@ -236,4 +246,59 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    @GetMapping("/orders")
+    public String getAllOrders(Model model){
+        List<ProductOrder> allOrders = orderService.getAllOrders();
+        model.addAttribute("orders",allOrders);
+        model.addAttribute("search",false);
+        return "/admin/orders";
+    }
+
+    @PostMapping("/update-order-status")
+    public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st,HttpSession session){
+        OrderStatus[] values = OrderStatus.values();
+        String status=null;
+
+        for(OrderStatus orderStatus:values){
+            if(orderStatus.getId().equals(st)){
+                status=orderStatus.getName();
+            }
+        }
+        ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
+        try {
+            commonUtil.sendMailForProductOrder(updateOrder,status);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(!ObjectUtils.isEmpty(updateOrder)){
+            session.setAttribute("successMsg","Updated Successfully");
+        }
+        else{
+            session.setAttribute("errorMsg","Something went wrong :(");
+        }
+        return "redirect:/admin/orders";
+    }
+
+    @GetMapping("/search-order")
+    public String search(@RequestParam String orderId,Model model,HttpSession session){
+        
+            ProductOrder order = orderService.getOrdersByOrderId(orderId.trim());
+            if (ObjectUtils.isEmpty(order)) {
+                session.setAttribute("errorMsg", "No order available with this id");
+                model.addAttribute("orderDetails", null);
+            } else {
+                model.addAttribute("orderDetails", order);
+            }
+            model.addAttribute("search", true);
+
+
+        return "/admin/orders";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam String ch,Model model){
+        List<Product> searchProducts = productService.searchProduct(ch);
+        model.addAttribute("products",searchProducts);
+        return "products";
+    }
 }

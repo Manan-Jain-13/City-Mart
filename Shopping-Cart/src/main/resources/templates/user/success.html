@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Order Success</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+</head>
+<body>
+<section>
+    <div class="container">
+        <div class="order_success_card animate__animated animate__fadeIn">
+            <div class="order_success_content">
+                <div class="order_success_checkmark animate__animated animate__bounceIn">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <h1 class="order_success_title animate__animated animate__fadeInUp">
+                    Thank You for Your Order!
+                </h1>
+
+                <div class="order_success_details animate__animated animate__fadeInUp animate__delay-1s">
+                    <p class="order_success_message">Your order has been successfully placed!</p>
+                    <p class="order_success_delivery">We're preparing your items for shipment.</p>
+                </div>
+
+                <div class="order_success_info animate__animated animate__fadeInUp animate__delay-2s">
+                    <div class="order_success_info_item">
+                        <i class="fa-solid fa-truck"></i>
+                        <p>Expected Delivery<br>Within 3-5 Business Days</p>
+                    </div>
+                    <div class="order_success_info_item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <p>Confirmation Email<br>Has Been Sent</p>
+                    </div>
+                </div>
+
+                <div class="order_success_buttons animate__animated animate__fadeInUp animate__delay-3s">
+                    <a href="/" class="order_success_btn_home">
+                        <i class="fa-solid fa-house"></i> Return Home
+                    </a>
+                    <a href="/user/user-orders" class="order_success_btn_track">
+                        <i class="fa-solid fa-box"></i> Track Order
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

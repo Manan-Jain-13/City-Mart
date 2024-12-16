@@ -62,6 +62,12 @@
             </li>
             </th:block>
             <th:block th:if="${user!=null}">
+                <th:block th:if="${user.role=='ROLE_USER'}">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/cart"><i class="fa-solid fa-dolly fa-inverse"></i>
+                        <strong style="color: white;">Cart[ [[${countCart}]] ]</strong></a>
+                </li>
+                </th:block>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle active" href="/signin" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,16 +75,18 @@
                         <strong style="color: white;"> [[${user.name}]] </strong>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">View Profile</a></li>
+                        <li><a class="dropdown-item" href="/user/profile">View Profile</a></li>
                         <li><a class="dropdown-item" href="#">Edit Profile</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Your Orders</a></li>
+                        <li><a class="dropdown-item" href="/user/user-orders">My Orders</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
                 </li>
-            <li class="nav-item">
+          <!--  <li class="nav-item">
                 <a class="nav-link" href="/logout"><i class="fa-solid fa-right-to-bracket fa-inverse"></i>
                     <strong style="color: white;">Logout</strong></a>
             </li>
+          -->
             </th:block>
         </ul>
 

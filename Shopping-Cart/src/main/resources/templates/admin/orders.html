@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Orders</title>
+</head>
+<body>
+<section>
+    <div class="admin-orders-container">
+        <div class="admin-orders-header">
+            <h1 class="admin-orders-title">Order Management</h1>
+            <p class="admin-orders-subtitle">Track and manage all customer orders in one place</p>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <!-- Success Message -->
+                <div th:if="${session.successMsg}" class="admin-orders-message admin-orders-success">
+                    <p class="fw-bold mb-0" th:text="${session.successMsg}"></p>
+                    <div th:remove="tag" th:text="${@commonServiceImpl.removeSessionMsg()}"></div>
+                </div>
+
+                <!-- Error Message -->
+                <div th:if="${session.errorMsg}" class="admin-orders-message admin-orders-error">
+                    <p class="fw-bold mb-0" th:text="${session.errorMsg}"></p>
+                    <div th:remove="tag" th:text="${@commonServiceImpl.removeSessionMsg()}"></div>
+                </div>
+
+                <!-- Search Section -->
+                <div class="admin-orders-search-wrapper">
+                    <form action="/admin/search-order" method="get">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-md-8 col-lg-10">
+                                <input type="text" placeholder="Search by Order ID"
+                                       class="admin-orders-search-input" name="orderId" >
+                            </div>
+                            <div class="col-md-4 col-lg-2">
+                                <button class="admin-orders-search-button w-100">
+                                    Search Orders
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="admin-orders-table-wrapper">
+                    <div class="table-responsive">
+                        <table class="admin-orders-table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Customer Details</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Product Details</th>
+                                <th scope="col">Price Information</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--For searching a particular product-->
+                            <th:block th:if="${search}">
+                                <th:block th:if="${orderDetails!=null}">
+                                <tr >
+                                    <td class="admin-orders-id" th:text="${orderDetails.orderId}"></td>
+                                    <td class="admin-orders-customer-details">
+                                        <div class="details-line">
+                                            <strong>Name:</strong>
+                                            <span th:text="${orderDetails.orderAddress.firstName + ' '
+                                                           + orderDetails.orderAddress.lastName}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Email:</strong>
+                                            <span th:text="${orderDetails.orderAddress.email}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Mobile:</strong>
+                                            <span th:text="${orderDetails.orderAddress.mobileNo}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Address:</strong>
+                                            <span th:text="${orderDetails.orderAddress.address}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Location:</strong>
+                                            <span th:text="${orderDetails.orderAddress.city + ', ' +
+                                             orderDetails.orderAddress.state + ' - ' +
+                                             orderDetails.orderAddress.pincode}"></span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${#temporals.format(orderDetails.orderDate, 'dd MMM yyyy')}"></td>
+                                    <td>
+                                        <div class="admin-orders-product" th:text="${orderDetails.product.title}"></div>
+                                    </td>
+                                    <td class="admin-orders-price-details">
+                                        <div class="price-line">
+                                            <strong>Quantity:</strong>
+                                            <span th:text="${orderDetails.quantity}"></span>
+                                        </div>
+                                        <div class="price-line">
+                                            <strong>Unit Price:</strong>
+                                            <span th:text="${'₹' + #numbers.formatDecimal(orderDetails.price, 0, 'COMMA', 2, 'POINT')}"></span>
+                                        </div>
+                                        <div class="price-line total">
+                                            <strong>Total:</strong>
+                                            <span th:text="${'₹' + #numbers.formatDecimal(orderDetails.quantity * orderDetails.price, 0, 'COMMA', 2, 'POINT')}"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="admin-orders-status"
+                                              th:classappend="${'status-' + #strings.toLowerCase(#strings.replace(orderDetails.status, ' ', ''))}"
+                                              th:text="${orderDetails.status}">
+                                        </span>
+                                    </td>
+                                    <td class="admin-orders-actions">
+                                        <form action="/admin/update-order-status" method="post">
+                                            <div class="row g-2">
+                                                <div class="col-12">
+                                                    <select class="admin-orders-status-select" name="st">
+                                                        <option value="">Change Status</option>
+                                                        <option value="1">In Progress</option>
+                                                        <option value="2">Order Received</option>
+                                                        <option value="3">Order Packed</option>
+                                                        <option value="4">Product Shipped</option>
+                                                        <option value="5">Product Delivered</option>
+                                                        <option value="6">Cancel Order</option>
+                                                    </select>
+                                                </div>
+                                                <input th:value="${orderDetails.id}" name="id" type="hidden">
+                                                <div class="col-12">
+                                                    <th:block th:if="${orderDetails.status=='Cancelled' || orderDetails.status=='Product Delivered'}">
+                                                        <button class="admin-orders-update-button disabled" disabled>
+                                                            Update Status
+                                                        </button>
+                                                    </th:block>
+                                                    <th:block th:unless="${orderDetails.status=='Cancelled' || orderDetails.status=='Product Delivered'}">
+                                                        <button class="admin-orders-update-button">
+                                                            Update Status
+                                                        </button>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </th:block>
+                                <th:block th:unless="${orderDetails!=null}">
+                                    <p class="fs-3 text-center text-danger">[[${errorMsg}]]</p>
+                                </th:block>
+                            </th:block>
+
+                            <!--For giving all orders-->
+                            <th:block th:unless="${search}">
+                                <tr th:each="o : ${orders}">
+                                    <td class="admin-orders-id" th:text="${o.orderId}"></td>
+                                    <td class="admin-orders-customer-details">
+                                        <div class="details-line">
+                                            <strong>Name:</strong>
+                                            <span th:text="${o.orderAddress.firstName + ' ' + o.orderAddress.lastName}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Email:</strong>
+                                            <span th:text="${o.orderAddress.email}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Mobile:</strong>
+                                            <span th:text="${o.orderAddress.mobileNo}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Address:</strong>
+                                            <span th:text="${o.orderAddress.address}"></span>
+                                        </div>
+                                        <div class="details-line">
+                                            <strong>Location:</strong>
+                                            <span th:text="${o.orderAddress.city + ', ' + o.orderAddress.state + ' - ' + o.orderAddress.pincode}"></span>
+                                        </div>
+                                    </td>
+                                    <td th:text="${#temporals.format(o.orderDate, 'dd MMM yyyy')}"></td>
+                                    <td>
+                                        <div class="admin-orders-product" th:text="${o.product.title}"></div>
+                                    </td>
+                                    <td class="admin-orders-price-details">
+                                        <div class="price-line">
+                                            <strong>Quantity:</strong>
+                                            <span th:text="${o.quantity}"></span>
+                                        </div>
+                                        <div class="price-line">
+                                            <strong>Unit Price:</strong>
+                                            <span th:text="${'₹' + #numbers.formatDecimal(o.price, 0, 'COMMA', 2, 'POINT')}"></span>
+                                        </div>
+                                        <div class="price-line total">
+                                            <strong>Total:</strong>
+                                            <span th:text="${'₹' + #numbers.formatDecimal(o.quantity * o.price, 0, 'COMMA', 2, 'POINT')}"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="admin-orders-status"
+                                              th:classappend="${'status-' + #strings.toLowerCase(#strings.replace(o.status, ' ', ''))}"
+                                              th:text="${o.status}">
+                                        </span>
+                                    </td>
+                                    <td class="admin-orders-actions">
+                                        <form action="/admin/update-order-status" method="post">
+                                            <div class="row g-2">
+                                                <div class="col-12">
+                                                    <select class="admin-orders-status-select" name="st">
+                                                        <option value="">Change Status</option>
+                                                        <option value="1">In Progress</option>
+                                                        <option value="2">Order Received</option>
+                                                        <option value="3">Order Packed</option>
+                                                        <option value="4">Product Shipped</option>
+                                                        <option value="5">Product Delivered</option>
+                                                        <option value="6">Cancel Order</option>
+                                                    </select>
+                                                </div>
+                                                <input th:value="${o.id}" name="id" type="hidden">
+                                                <div class="col-12">
+                                                    <th:block th:if="${o.status=='Cancelled' || o.status=='Product Delivered'}">
+                                                        <button class="admin-orders-update-button disabled" disabled>
+                                                            Update Status
+                                                        </button>
+                                                    </th:block>
+                                                    <th:block th:unless="${o.status=='Cancelled' || o.status=='Product Delivered'}">
+                                                        <button class="admin-orders-update-button">
+                                                            Update Status
+                                                        </button>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </th:block>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

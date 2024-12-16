@@ -10,4 +10,6 @@ public interface ProdcutRepository extends JpaRepository<Product, Integer> {
     public List<Product> findByIsActiveTrue();
 
     List<Product> findByCategory(String category);
+
+    List<Product> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(String ch1, String ch2);
 }
